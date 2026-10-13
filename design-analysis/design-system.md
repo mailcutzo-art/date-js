@@ -27,8 +27,13 @@ Brand art (`lib/shared/brand`):
 - `HeartSticker`, `CrownDoodle`, `Starburst`, `SwallowDoodle`, `SparkleDoodle`.
 - `FramedPhoto`: photo in a thick cream frame with a name tag.
 
-Where it shows: welcome (five swipeable poster slides + black sign-in panel), splash, swipe card
-(cream frame, marker name, serif quote, ink square X / gem / heart buttons), matches grid (framed
+Where it shows: welcome (five swipeable poster slides + black sign-in panel), splash, the Discover
+feed (a vertical scroll of `FeedCard`s: cream-framed photo with marker name and serif quote, cream
+interest chips with shared ones in magenta, ink square X / gem / heart buttons; swipe a card
+sideways to pass or like, pull down to refresh, the header hides on scroll), matches grid (framed
 tiles, heart stickers), chat (black / cream bubbles), profile detail (royal-purple about panel with a
 crown), paywall and profile-tab upsell (wave posters), match overlay, icon-only bottom bar with a
 magenta dot.
+
+`SwipeDeck` (`lib/shared/widgets/swipe_deck.dart`) is no longer used by Discover; it is kept, with
+its tests, in case a one-card-at-a-time mode comes back.
