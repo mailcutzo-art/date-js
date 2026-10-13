@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../design_system/design_system.dart';
 import '../../domain/models/message.dart';
+import '../brand_colors.dart';
 import 'photo_art.dart';
 
 /// One chat message: text, image or voice note, with a delivery tick on your own messages.
@@ -19,13 +20,16 @@ class MessageBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final fromMe = message.fromMe;
-    final background = fromMe ? colors.primary : colors.muted;
-    final foreground = fromMe ? colors.primaryForeground : colors.foreground;
+    // Your messages are ink (black, cream on dark); theirs are cream (a soft fill on dark).
+    final background = fromMe ? colors.ink : colors.creamSurface;
+    final foreground = fromMe
+        ? colors.inkForeground
+        : (colors.isDark ? colors.foreground : SynkPalette.nightInk);
     final radius = BorderRadius.only(
-      topLeft: const Radius.circular(20),
-      topRight: const Radius.circular(20),
-      bottomLeft: Radius.circular(fromMe ? 20 : 6),
-      bottomRight: Radius.circular(fromMe ? 6 : 20),
+      topLeft: const Radius.circular(16),
+      topRight: const Radius.circular(16),
+      bottomLeft: Radius.circular(fromMe ? 16 : 4),
+      bottomRight: Radius.circular(fromMe ? 4 : 16),
     );
 
     final Widget content = switch (message.kind) {
@@ -128,7 +132,7 @@ class _Tick extends StatelessWidget {
               : SynkIcons.checkDouble,
           size: 14,
           color: status == MessageStatus.read
-              ? SynkPalette.indigo
+              ? colors.brandText
               : colors.mutedForeground,
         ),
       ),

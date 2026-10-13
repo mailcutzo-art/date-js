@@ -27,9 +27,9 @@ class MainShell extends ConsumerWidget {
           initialLocation: i == navigationShell.currentIndex,
         ),
         items: [
-          const NavItem(icon: SynkIcons.flame, label: 'Discover'),
-          const NavItem(icon: SynkIcons.heart, label: 'Matches'),
-          NavItem(icon: SynkIcons.chat, label: 'Chats', badge: unread),
+          const NavItem(icon: SynkIcons.discover, label: 'Discover'),
+          const NavItem(icon: SynkIcons.cards, label: 'Matches'),
+          NavItem(icon: SynkIcons.chats, label: 'Chats', badge: unread),
           const NavItem(icon: SynkIcons.userCircle, label: 'Profile'),
         ],
       ),

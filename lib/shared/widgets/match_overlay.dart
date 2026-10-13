@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../design_system/design_system.dart';
 import '../../domain/models/profile.dart';
+import '../brand/brand.dart';
 import 'profile_avatar.dart';
 
 /// Result of the "It's a match" screen.
@@ -73,111 +74,132 @@ class _MatchOverlayState extends State<MatchOverlay>
       parent: _c,
       curve: const Interval(0.6, 1, curve: Curves.easeOut),
     );
-    return Material(
-      type: MaterialType.transparency,
-      child: SafeArea(
+    // The celebration is always on the dark brand backdrop, whatever the theme.
+    return Theme(
+      data: SynkThemeData.dark,
+      child: Material(
+        type: MaterialType.transparency,
         child: Stack(
           children: [
             const Positioned.fill(
-              child: IgnorePointer(child: Confetti(trigger: 1)),
+              child: WavyBackdrop(seed: 8, focus: Alignment(0, 0.05)),
             ),
-            Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+            const Positioned.fill(child: ColoredBox(color: Color(0x4D0C0B0D))),
+            SafeArea(
+              child: Stack(
                 children: [
-                  FadeTransition(
-                    opacity: fade,
-                    child: const SynkText(
-                      'It\'s a match!',
-                      variant: SynkTextVariant.h1,
-                      color: onDark,
-                    ),
+                  const Positioned.fill(
+                    child: IgnorePointer(child: Confetti(trigger: 1)),
                   ),
-                  const SizedBox(height: 8),
-                  FadeTransition(
-                    opacity: fade,
-                    child: SynkText(
-                      'You and ${widget.other.name} like each other.',
-                      variant: SynkTextVariant.p,
-                      color: onDark,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(height: 36),
-                  SizedBox(
-                    height: 150,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        AnimatedBuilder(
-                          animation: slide,
-                          builder: (context, child) => Transform.translate(
-                            offset: Offset(-90 * slide.value - 20, 0),
-                            child: Transform.rotate(
-                              angle: -0.12 * slide.value,
-                              child: child,
-                            ),
-                          ),
-                          child: ProfileAvatar(profile: widget.me, size: 130),
-                        ),
-                        AnimatedBuilder(
-                          animation: slide,
-                          builder: (context, child) => Transform.translate(
-                            offset: Offset(90 * slide.value + 20, 0),
-                            child: Transform.rotate(
-                              angle: 0.12 * slide.value,
-                              child: child,
-                            ),
-                          ),
-                          child: ProfileAvatar(
-                            profile: widget.other,
-                            size: 130,
-                          ),
-                        ),
-                        ScaleTransition(
-                          scale: pop,
-                          child: Container(
-                            width: 56,
-                            height: 56,
-                            decoration: BoxDecoration(
-                              color: context.colors.primary,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: onDark, width: 3),
-                            ),
-                            alignment: Alignment.center,
-                            child: const SynkIcon(
-                              SynkIcons.heart,
-                              size: 26,
-                              color: onDark,
-                              strokeWidth: 2.4,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 44),
-                  FadeTransition(
-                    opacity: fade,
+                  Padding(
+                    padding: const EdgeInsets.all(24),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SynkButton(
-                          label: 'Send a message',
-                          expand: true,
-                          size: SynkButtonSize.lg,
-                          onPressed: () =>
-                              Navigator.of(context).pop(MatchChoice.message),
+                        FadeTransition(
+                          opacity: fade,
+                          child: Transform.rotate(
+                            angle: -0.05,
+                            child: const SynkText(
+                              'It\'s a match!',
+                              variant: SynkTextVariant.poster,
+                              color: onDark,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         ),
-                        const SizedBox(height: 12),
-                        SynkButton(
-                          label: 'Keep swiping',
-                          variant: SynkButtonVariant.glass,
-                          expand: true,
-                          size: SynkButtonSize.lg,
-                          onPressed: () =>
-                              Navigator.of(context)
-                                  .pop(MatchChoice.keepSwiping),
+                        const SizedBox(height: 8),
+                        FadeTransition(
+                          opacity: fade,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: SynkPalette.nightInk,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: SynkText(
+                              'You and ${widget.other.name} like each other.',
+                              variant: SynkTextVariant.bio,
+                              color: SynkPalette.cream,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 36),
+                        SizedBox(
+                          height: 150,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              AnimatedBuilder(
+                                animation: slide,
+                                builder: (context, child) =>
+                                    Transform.translate(
+                                      offset: Offset(-90 * slide.value - 20, 0),
+                                      child: Transform.rotate(
+                                        angle: -0.12 * slide.value,
+                                        child: child,
+                                      ),
+                                    ),
+                                child: ProfileAvatar(
+                                  profile: widget.me,
+                                  size: 130,
+                                ),
+                              ),
+                              AnimatedBuilder(
+                                animation: slide,
+                                builder: (context, child) =>
+                                    Transform.translate(
+                                      offset: Offset(90 * slide.value + 20, 0),
+                                      child: Transform.rotate(
+                                        angle: 0.12 * slide.value,
+                                        child: child,
+                                      ),
+                                    ),
+                                child: ProfileAvatar(
+                                  profile: widget.other,
+                                  size: 130,
+                                ),
+                              ),
+                              ScaleTransition(
+                                scale: pop,
+                                child: const HeartSticker(
+                                  size: 64,
+                                  angle: -0.12,
+                                  fill: SynkPalette.hotMagenta,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 44),
+                        FadeTransition(
+                          opacity: fade,
+                          child: Column(
+                            children: [
+                              SynkButton(
+                                label: 'Send a message',
+                                expand: true,
+                                size: SynkButtonSize.lg,
+                                onPressed: () =>
+                                    Navigator.of(context)
+                                        .pop(MatchChoice.message),
+                              ),
+                              const SizedBox(height: 12),
+                              SynkButton(
+                                label: 'Keep swiping',
+                                variant: SynkButtonVariant.secondary,
+                                expand: true,
+                                size: SynkButtonSize.lg,
+                                onPressed: () =>
+                                    Navigator.of(context)
+                                        .pop(MatchChoice.keepSwiping),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),

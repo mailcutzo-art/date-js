@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../design_system/design_system.dart';
-import '../brand_colors.dart';
 
 class NavItem {
   const NavItem({required this.icon, required this.label, this.badge = 0});
@@ -13,7 +12,8 @@ class NavItem {
   final int badge;
 }
 
-/// Bottom navigation: icons with a sliding pill behind the selected one.
+/// Bottom navigation: outline icons only (labels are for screen readers), the selected one
+/// drawn in the foreground colour with a magenta dot underneath.
 class MainNavBar extends StatelessWidget {
   const MainNavBar({
     required this.items,
@@ -37,12 +37,13 @@ class MainNavBar extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: SizedBox(
-          height: 64,
+          height: 60,
           child: Row(
             children: [
               for (var i = 0; i < items.length; i++)
                 Expanded(
                   child: _NavButton(
+                    key: ValueKey('nav-${items[i].label}'),
                     item: items[i],
                     selected: i == currentIndex,
                     onTap: () => onTap(i),
@@ -61,6 +62,7 @@ class _NavButton extends StatelessWidget {
     required this.item,
     required this.selected,
     required this.onTap,
+    super.key,
   });
 
   final NavItem item;
@@ -86,59 +88,61 @@ class _NavButton extends StatelessWidget {
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    AnimatedContainer(
+                    AnimatedScale(
+                      scale: selected ? 1.08 : 1,
                       duration: SynkMotion.progress,
                       curve: SynkMotion.fastOutSlowIn,
-                      width: selected ? 56 : 36,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: selected
-                            ? colors.primary.withValues(alpha: 0.14)
-                            : Colors.transparent,
-                        borderRadius: SynkRadius.fullAll,
-                      ),
-                      alignment: Alignment.center,
                       child: SynkIcon(
                         item.icon,
-                        size: 22,
+                        size: 26,
+                        strokeWidth: selected ? 2.1 : 1.6,
                         color: selected
-                            ? colors.brandText
+                            ? colors.foreground
                             : colors.mutedForeground,
                       ),
                     ),
                     if (item.badge > 0)
                       Positioned(
-                        right: selected ? 4 : -2,
-                        top: -2,
+                        right: -8,
+                        top: -5,
                         child: Container(
                           constraints: const BoxConstraints(
-                            minWidth: 16,
-                            minHeight: 16,
+                            minWidth: 17,
+                            minHeight: 17,
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           decoration: BoxDecoration(
-                            color: colors.primary,
+                            color: SynkPalette.hotMagenta,
                             borderRadius: SynkRadius.fullAll,
+                            border: Border.all(
+                              color: colors.background,
+                              width: 1.5,
+                            ),
                           ),
                           alignment: Alignment.center,
                           child: Text(
                             '${item.badge}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontFamily: 'Manrope',
                               fontSize: 10,
-                              fontWeight: FontWeight.w700,
-                              color: colors.primaryForeground,
+                              fontWeight: FontWeight.w800,
+                              color: SynkPalette.nightInk,
                             ),
                           ),
                         ),
                       ),
                   ],
                 ),
-                const SizedBox(height: 2),
-                SynkText(
-                  item.label,
-                  variant: SynkTextVariant.listDescription,
-                  color: selected ? colors.brandText : colors.mutedForeground,
+                const SizedBox(height: 5),
+                AnimatedContainer(
+                  duration: SynkMotion.progress,
+                  curve: SynkMotion.fastOutSlowIn,
+                  width: selected ? 6 : 0,
+                  height: 6,
+                  decoration: const BoxDecoration(
+                    color: SynkPalette.hotMagenta,
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ],
             ),

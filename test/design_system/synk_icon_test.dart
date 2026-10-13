@@ -32,7 +32,7 @@ void main() {
     );
 
     test('mirrors the Android semantic icon set', () {
-      expect(SynkIcons.values.length, 92);
+      expect(SynkIcons.values.length, 96);
       expect(
         SynkIcons.values.map((e) => e.name),
         containsAll(<String>[
@@ -50,6 +50,10 @@ void main() {
           'hardDrive',
           'micOff',
           'fullscreenExit',
+          'discover',
+          'chats',
+          'cards',
+          'gem',
         ]),
       );
     });
@@ -82,6 +86,10 @@ void main() {
             SynkIcons.fullscreen,
             SynkIcons.settings,
             SynkIcons.trash,
+            SynkIcons.discover,
+            SynkIcons.chats,
+            SynkIcons.cards,
+            SynkIcons.gem,
           ])
             GoldenCell(icon.name, SynkIcon(icon, size: 28)),
           const GoldenCell('size 12', SynkIcon(SynkIcons.heart, size: 12)),

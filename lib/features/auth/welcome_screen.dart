@@ -4,162 +4,169 @@ import 'package:go_router/go_router.dart';
 
 import '../../app/providers/session_providers.dart';
 import '../../app/router/app_routes.dart';
-import '../../core/config/app_info.dart';
 import '../../design_system/design_system.dart';
-import '../../shared/widgets/photo_art.dart';
+import '../../shared/brand/brand.dart';
+import 'welcome_slides.dart';
 
-/// First screen for a signed-out user: floating photo cards, the pitch and the two sign-in
-/// choices.
-class WelcomeScreen extends ConsumerWidget {
+/// First screen for a signed-out user: swipeable poster slides on wavy backgrounds, then the
+/// pitch and the two sign-in choices on a black panel with a wavy top edge.
+class WelcomeScreen extends ConsumerStatefulWidget {
   const WelcomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final colors = context.colors;
-    return Scaffold(
-      backgroundColor: colors.background,
-      body: SafeArea(
-        child: Column(
-          children: [
-            const Expanded(child: _FloatingCards()),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: SynkSpace.columnMax,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SynkText(
-                      'Dating that starts with a real hello.',
-                      variant: SynkTextVariant.h1,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 10),
-                    const SynkText(
-                      kAppTagline,
-                      variant: SynkTextVariant.muted,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 28),
-                    SynkButton(
-                      label: 'Continue with phone',
-                      size: SynkButtonSize.lg,
-                      expand: true,
-                      onPressed: () => context.push(AppRoutes.signIn),
-                    ),
-                    const SizedBox(height: 12),
-                    SynkButton(
-                      label: 'Continue with Google',
-                      variant: SynkButtonVariant.outline,
-                      size: SynkButtonSize.lg,
-                      expand: true,
-                      onPressed: () => ref
-                          .read(sessionProvider.notifier)
-                          .continueWithGoogle(),
-                    ),
-                    const SizedBox(height: 16),
-                    const SynkText(
-                      'By continuing you agree to our Terms and Privacy Policy. '
-                      'You must be 18 or older.',
-                      variant: SynkTextVariant.listDescription,
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  ConsumerState<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-/// Three tilted photo cards that drift up and down out of phase (a 7 s loop).
-class _FloatingCards extends StatefulWidget {
-  const _FloatingCards();
+class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
+  final _pages = PageController();
+  int _page = 0;
 
-  @override
-  State<_FloatingCards> createState() => _FloatingCardsState();
-}
-
-class _FloatingCardsState extends State<_FloatingCards>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _c = AnimationController(
-    vsync: this,
-    duration: const Duration(seconds: 7),
-  );
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (MediaQuery.disableAnimationsOf(context)) {
-      _c.stop();
-    } else if (!_c.isAnimating) {
-      _c.repeat(reverse: true);
-    }
-  }
+  /// Height of the panel's wave; the panel is pulled up by this much so the slide shows
+  /// through the wave instead of a flat edge.
+  static const double _wave = 16;
 
   @override
   void dispose() {
-    _c.dispose();
+    _pages.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        const Positioned.fill(child: DotGridBackground()),
-        Positioned.fill(
-          child: AnimatedBuilder(
-            animation: _c,
-            builder: (context, _) {
-              final t = Curves.easeInOut.transform(_c.value);
-              return Stack(
-                alignment: Alignment.center,
-                children: [
-                  _card(seed: 12, angle: -0.16, dx: -92, dy: 22 - 16 * t),
-                  _card(seed: 33, angle: 0.15, dx: 92, dy: 6 + 14 * t),
-                  _card(seed: 52, angle: -0.02, dx: 0, dy: -10 + 12 * t),
-                ],
-              );
-            },
+    return Scaffold(
+      backgroundColor: SynkPalette.nightInk,
+      body: Column(
+        children: [
+          Expanded(
+            child: Stack(
+              children: [
+                PageView.builder(
+                  controller: _pages,
+                  itemCount: WelcomeSlide.count,
+                  onPageChanged: (i) => setState(() => _page = i),
+                  itemBuilder: (context, i) => WelcomeSlide(index: i),
+                ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: _wave * 2 + 8,
+                  child: _Dots(count: WelcomeSlide.count, index: _page),
+                ),
+              ],
+            ),
           ),
+          Transform.translate(
+            offset: const Offset(0, -_wave * 2),
+            // The panel is always black, so it always uses the dark tokens (cream button).
+            child: Theme(
+              data: SynkThemeData.dark,
+              child: InkPanel(
+                amplitude: _wave,
+                child: SafeArea(
+                  top: false,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 4, 24, 0),
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: SynkSpace.columnMax,
+                        ),
+                        child: _Actions(
+                          onPhone: () => context.push(AppRoutes.signIn),
+                          onGoogle: () => ref
+                              .read(sessionProvider.notifier)
+                              .continueWithGoogle(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Actions extends StatelessWidget {
+  const _Actions({required this.onPhone, required this.onGoogle});
+
+  final VoidCallback onPhone;
+  final VoidCallback onGoogle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SynkText(
+          'Dating that starts with a real hello.',
+          variant: SynkTextVariant.h2,
+          color: Colors.white,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 18),
+        SynkButton(
+          label: 'Continue with phone',
+          size: SynkButtonSize.lg,
+          expand: true,
+          onPressed: onPhone,
+        ),
+        const SizedBox(height: 10),
+        SynkButton(
+          label: 'Continue with Google',
+          variant: SynkButtonVariant.outline,
+          size: SynkButtonSize.lg,
+          expand: true,
+          contentColor: Colors.white,
+          onPressed: onGoogle,
+        ),
+        const SizedBox(height: 12),
+        const SynkText(
+          'By continuing you agree to our Terms and Privacy Policy. '
+          'You must be 18 or older.',
+          variant: SynkTextVariant.listDescription,
+          textAlign: TextAlign.center,
         ),
       ],
     );
   }
+}
 
-  Widget _card({
-    required int seed,
-    required double angle,
-    required double dx,
-    required double dy,
-  }) {
-    return Transform.translate(
-      offset: Offset(dx, dy),
-      child: Transform.rotate(
-        angle: angle,
-        child: Container(
-          width: 150,
-          height: 210,
-          decoration: const BoxDecoration(
-            borderRadius: SynkRadius.xlAll,
-            boxShadow: [
-              BoxShadow(
-                color: Color(0x33000000),
-                blurRadius: 24,
-                offset: Offset(0, 10),
+/// Page indicator: the current page is a wide white pill, the others small dots.
+class _Dots extends StatelessWidget {
+  const _Dots({required this.count, required this.index});
+
+  final int count;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: 'Slide ${index + 1} of $count',
+      child: ExcludeSemantics(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (var i = 0; i < count; i++)
+              AnimatedContainer(
+                duration: SynkMotion.progress,
+                curve: SynkMotion.fastOutSlowIn,
+                margin: const EdgeInsets.symmetric(horizontal: 3),
+                width: i == index ? 22 : 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: i == index
+                      ? Colors.white
+                      : Colors.white.withValues(alpha: 0.55),
+                  borderRadius: SynkRadius.fullAll,
+                  border: Border.all(color: SynkPalette.nightInk, width: 1.2),
+                ),
               ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: SynkRadius.xlAll,
-            child: PhotoArt(seed: seed),
-          ),
+          ],
         ),
       ),
     );

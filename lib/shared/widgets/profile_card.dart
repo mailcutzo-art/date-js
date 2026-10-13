@@ -6,7 +6,8 @@ import 'photo_art.dart';
 import 'photo_progress_bars.dart';
 import 'verified_badge.dart';
 
-/// Full-bleed profile card used by the swipe deck. Tapping the left/right third of the photo
+/// Profile card used by the swipe deck: the photo in a thick cream frame, the name in marker
+/// lettering and the first line of the bio as a serif quote. Tapping the left/right third of the photo
 /// steps through the photos; the stamps fade in with the drag ([likeOpacity] etc.).
 class ProfileCard extends StatefulWidget {
   const ProfileCard({
@@ -41,106 +42,122 @@ class _ProfileCardState extends State<ProfileCard> {
   Widget build(BuildContext context) {
     final profile = widget.profile;
     final photo = profile.photos[_index.clamp(0, profile.photos.length - 1)];
-    return ClipRRect(
-      borderRadius: SynkRadius.xxlAll,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 160),
-            child: PhotoArt(key: ValueKey(photo.id), seed: photo.seed),
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        color: SynkPalette.cream,
+        borderRadius: SynkRadius.xxlAll,
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x33000000),
+            blurRadius: 18,
+            offset: Offset(0, 8),
           ),
-          // Tap zones for the photo stack.
-          Row(
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(6),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(SynkRadius.xxl - 4),
+          child: Stack(
+            fit: StackFit.expand,
             children: [
-              Expanded(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () => _step(-1),
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 160),
+                child: PhotoArt(key: ValueKey(photo.id), seed: photo.seed),
+              ),
+              // Tap zones for the photo stack.
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () => _step(-1),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () => _step(1),
+                    ),
+                  ),
+                ],
+              ),
+              const IgnorePointer(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Color(0x66000000), Colors.transparent],
+                      stops: [0, 0.22],
+                    ),
+                  ),
                 ),
               ),
-              Expanded(
-                flex: 2,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () => _step(1),
+              const IgnorePointer(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.transparent, Color(0xCC000000)],
+                      stops: [0.55, 1],
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 14,
+                right: 14,
+                top: 12,
+                child: PhotoProgressBars(
+                  count: profile.photos.length,
+                  index: _index,
+                ),
+              ),
+              Positioned(
+                left: 20,
+                right: 20,
+                bottom: 20,
+                child: _Caption(profile: profile, onInfoTap: widget.onInfoTap),
+              ),
+              Positioned(
+                left: 24,
+                top: 48,
+                child: _Stamp(
+                  text: 'LIKE',
+                  color: SynkPalette.hotMagenta,
+                  opacity: widget.likeOpacity,
+                  angle: -0.22,
+                ),
+              ),
+              Positioned(
+                right: 24,
+                top: 48,
+                child: _Stamp(
+                  text: 'NOPE',
+                  color: SynkPalette.flameOrange,
+                  opacity: widget.nopeOpacity,
+                  angle: 0.22,
+                ),
+              ),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 140,
+                child: Center(
+                  child: _Stamp(
+                    text: 'SUPER LIKE',
+                    color: SynkPalette.electricViolet,
+                    opacity: widget.superOpacity,
+                    angle: 0,
+                  ),
                 ),
               ),
             ],
           ),
-          const IgnorePointer(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0x66000000), Colors.transparent],
-                  stops: [0, 0.22],
-                ),
-              ),
-            ),
-          ),
-          const IgnorePointer(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.transparent, Color(0xCC000000)],
-                  stops: [0.55, 1],
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            left: 14,
-            right: 14,
-            top: 12,
-            child: PhotoProgressBars(
-              count: profile.photos.length,
-              index: _index,
-            ),
-          ),
-          Positioned(
-            left: 20,
-            right: 20,
-            bottom: 20,
-            child: _Caption(profile: profile, onInfoTap: widget.onInfoTap),
-          ),
-          Positioned(
-            left: 24,
-            top: 48,
-            child: _Stamp(
-              text: 'LIKE',
-              color: SynkPalette.success,
-              opacity: widget.likeOpacity,
-              angle: -0.22,
-            ),
-          ),
-          Positioned(
-            right: 24,
-            top: 48,
-            child: _Stamp(
-              text: 'NOPE',
-              color: SynkPalette.youtubeRed,
-              opacity: widget.nopeOpacity,
-              angle: 0.22,
-            ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 140,
-            child: Center(
-              child: _Stamp(
-                text: 'SUPER LIKE',
-                color: SynkPalette.indigo,
-                opacity: widget.superOpacity,
-                angle: 0,
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -152,9 +169,17 @@ class _Caption extends StatelessWidget {
   final Profile profile;
   final VoidCallback? onInfoTap;
 
+  /// First sentence of the bio, the card's quote.
+  static String _quote(String bio) {
+    final text = bio.trim();
+    final end = text.indexOf(RegExp(r'[.!?](\s|$)'));
+    return end < 0 ? text : text.substring(0, end + 1);
+  }
+
   @override
   Widget build(BuildContext context) {
     const onPhoto = Colors.white;
+    final quote = _quote(profile.bio);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -179,7 +204,16 @@ class _Caption extends StatelessWidget {
                   ],
                 ],
               ),
-              const SizedBox(height: 4),
+              if (quote.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                SynkText(
+                  quote,
+                  variant: SynkTextVariant.bio,
+                  color: SynkPalette.cream,
+                  maxLines: 2,
+                ),
+              ],
+              const SizedBox(height: 6),
               Row(
                 children: [
                   const SynkIcon(SynkIcons.pin, size: 14, color: onPhoto),
@@ -199,13 +233,17 @@ class _Caption extends StatelessWidget {
           ),
         ),
         if (onInfoTap != null)
-          CircleIconButton(
-            icon: SynkIcons.info,
-            semanticLabel: 'View ${profile.name}\'s profile',
-            tone: CircleButtonTone.outline,
-            diameter: 40,
-            iconSize: 18,
-            onPressed: onInfoTap,
+          // Always light on the photo, whatever the app theme.
+          Theme(
+            data: SynkThemeData.dark,
+            child: CircleIconButton(
+              icon: SynkIcons.info,
+              semanticLabel: 'View ${profile.name}\'s profile',
+              tone: CircleButtonTone.outline,
+              diameter: 40,
+              iconSize: 18,
+              onPressed: onInfoTap,
+            ),
           ),
       ],
     );
@@ -236,15 +274,15 @@ class _Stamp extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             decoration: BoxDecoration(
+              color: SynkPalette.nightInk,
               border: Border.all(color: color, width: 3),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
               text,
               style: TextStyle(
-                fontFamily: 'Manrope',
-                fontSize: 28,
-                fontWeight: FontWeight.w800,
+                fontFamily: SynkTypography.posterFamily,
+                fontSize: 30,
                 letterSpacing: 1.5,
                 color: color,
               ),

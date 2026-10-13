@@ -6,6 +6,7 @@ import '../../app/providers/session_providers.dart';
 import '../../app/shell/root_shell.dart';
 import '../../core/config/app_info.dart';
 import '../../design_system/design_system.dart';
+import '../../shared/brand/brand.dart';
 import '../../shared/brand_colors.dart';
 
 class _Plan {
@@ -119,7 +120,7 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen>
                   ),
                   const SizedBox(height: 16),
                   const _Benefit(SynkIcons.heart, 'See everyone who likes you'),
-                  const _Benefit(SynkIcons.spark, '5 Super Likes every day'),
+                  const _Benefit(SynkIcons.gem, '5 Super Likes every day'),
                   const _Benefit(
                     SynkIcons.checkCircle,
                     'Filter to verified profiles only',
@@ -193,6 +194,8 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen>
   }
 }
 
+/// Poster hero: rippling brand waves, a crown on a cream starburst and "Date like a queen".
+/// The waves slowly breathe (the starburst scales) unless animations are turned off.
 class _Hero extends StatelessWidget {
   const _Hero({required this.glow});
 
@@ -200,36 +203,45 @@ class _Hero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: glow,
-      builder: (context, _) {
-        final t = Curves.easeInOut.transform(glow.value);
-        return Container(
-          height: 104,
-          decoration: BoxDecoration(
-            borderRadius: SynkRadius.xxlAll,
-            gradient: LinearGradient(
-              begin: Alignment(-1 + t, -1),
-              end: Alignment(1, 1 - t),
-              colors: const [
-                Color(0xFFFFC371),
-                Color(0xFFFF5F6D),
-                Color(0xFFC6005C),
-              ],
+    return ClipRRect(
+      borderRadius: SynkRadius.xxlAll,
+      child: SizedBox(
+        height: 236,
+        child: Stack(
+          children: [
+            const Positioned.fill(
+              child: WavyBackdrop(seed: 5, focus: Alignment(0.6, 0.3)),
             ),
-          ),
-          alignment: Alignment.center,
-          child: Transform.scale(
-            scale: 1 + 0.08 * t,
-            child: const SynkIcon(
-              SynkIcons.crown,
-              size: 52,
-              color: Colors.white,
-              strokeWidth: 1.6,
+            Positioned(
+              right: -18,
+              bottom: -26,
+              child: AnimatedBuilder(
+                animation: glow,
+                builder: (context, child) => Transform.scale(
+                  scale: 1 + 0.06 * Curves.easeInOut.transform(glow.value),
+                  child: child,
+                ),
+                child: const Starburst(
+                  size: 170,
+                  child: CrownDoodle(size: 78, angle: -0.1),
+                ),
+              ),
             ),
-          ),
-        );
-      },
+            const Positioned(
+              left: 18,
+              top: 26,
+              child: PosterTitle(
+                lines: [
+                  PosterLine('Date like a', scale: 0.55),
+                  PosterLine('queen', scale: 1.2),
+                ],
+                size: 46,
+                align: CrossAxisAlignment.start,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -250,11 +262,12 @@ class _Benefit extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: context.colors.primary.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
+              color: SynkPalette.nightInk,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: SynkPalette.cream, width: 1.5),
             ),
             alignment: Alignment.center,
-            child: SynkIcon(icon, size: 18, color: context.colors.brandText),
+            child: SynkIcon(icon, size: 18, color: SynkPalette.cream),
           ),
           const SizedBox(width: 14),
           Expanded(child: SynkText(text, variant: SynkTextVariant.p)),
@@ -291,13 +304,11 @@ class _PlanCard extends StatelessWidget {
           duration: SynkMotion.progress,
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
           decoration: BoxDecoration(
-            color: selected
-                ? colors.primary.withValues(alpha: 0.08)
-                : colors.card,
+            color: selected ? colors.creamSurface : colors.card,
             borderRadius: SynkRadius.lgAll,
             border: Border.all(
-              color: selected ? colors.brandText : colors.border,
-              width: selected ? 2 : 1,
+              color: selected ? colors.foreground : colors.border,
+              width: selected ? 2.5 : 1,
             ),
           ),
           child: Row(
@@ -311,11 +322,7 @@ class _PlanCard extends StatelessWidget {
                         SynkText(plan.title, variant: SynkTextVariant.large),
                         if (plan.tag != null) ...[
                           const SizedBox(width: 8),
-                          SynkBadge(
-                            text: plan.tag!,
-                            variant: SynkBadgeVariant.amber,
-                            small: true,
-                          ),
+                          SynkBadge(text: plan.tag!, small: true),
                         ],
                       ],
                     ),

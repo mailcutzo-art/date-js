@@ -155,7 +155,7 @@ void main() {
     testWidgets('selected icon is primary, unselected muted', (tester) async {
       await _pump(tester, _segmented());
       final icons = tester.widgetList<SynkIcon>(find.byType(SynkIcon)).toList();
-      expect(icons[0].color, light.primary);
+      expect(icons[0].color, light.primaryText);
       expect(icons[1].color, light.mutedForeground);
     });
 

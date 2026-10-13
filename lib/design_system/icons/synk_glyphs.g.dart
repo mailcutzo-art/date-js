@@ -1728,6 +1728,90 @@ const _gGift = SynkGlyph([
 ]);
 
 /// Semantic icon names used across the app.
+// Brand glyphs (drawn for this app on the same 24x24 stroke grid): the bottom-bar eye, the
+// double chat bubble, the card stack and the gem of the action buttons.
+const _gBrandEye = SynkGlyph([
+  SynkGlyphPart(
+    'M2.5 12C4.5 8 8 5.5 12 5.5C16 5.5 19.5 8 21.5 12C19.5 16 16 18.5 12 18.5C8 18.5 4.5 16 2.5 12Z',
+    stroke: true,
+    fill: false,
+    cap: StrokeCap.round,
+    join: StrokeJoin.round,
+  ),
+  SynkGlyphPart(
+    'M15 12A3 3 0 1 1 9 12A3 3 0 1 1 15 12Z',
+    stroke: true,
+    fill: false,
+    cap: StrokeCap.round,
+    join: StrokeJoin.round,
+  ),
+  SynkGlyphPart(
+    'M13 12A1 1 0 1 1 11 12A1 1 0 1 1 13 12Z',
+    stroke: false,
+    fill: true,
+    cap: StrokeCap.round,
+    join: StrokeJoin.round,
+  ),
+]);
+
+const _gChats = SynkGlyph([
+  SynkGlyphPart(
+    'M5 9H12.5C13.6 9 14.5 9.9 14.5 11V15C14.5 16.1 13.6 17 12.5 17H8.5L5.5 19.5V17H5C3.9 17 3 16.1 3 15V11C3 9.9 3.9 9 5 9Z',
+    stroke: true,
+    fill: false,
+    cap: StrokeCap.round,
+    join: StrokeJoin.round,
+  ),
+  SynkGlyphPart(
+    'M7.5 9V6C7.5 4.9 8.4 4 9.5 4H19C20.1 4 21 4.9 21 6V10.5C21 11.6 20.1 12.5 19 12.5H18.5V15L15.5 12.5H14.5',
+    stroke: true,
+    fill: false,
+    cap: StrokeCap.round,
+    join: StrokeJoin.round,
+  ),
+]);
+
+const _gCards = SynkGlyph([
+  SynkGlyphPart(
+    'M5 7.5H15C16.1 7.5 17 8.4 17 9.5V19C17 20.1 16.1 21 15 21H5C3.9 21 3 20.1 3 19V9.5C3 8.4 3.9 7.5 5 7.5Z',
+    stroke: true,
+    fill: false,
+    cap: StrokeCap.round,
+    join: StrokeJoin.round,
+  ),
+  SynkGlyphPart(
+    'M7 7.5V5.5C7 4.4 7.9 3.5 9 3.5H19C20.1 3.5 21 4.4 21 5.5V15C21 16.1 20.1 17 19 17H17',
+    stroke: true,
+    fill: false,
+    cap: StrokeCap.round,
+    join: StrokeJoin.round,
+  ),
+  SynkGlyphPart(
+    'M10 17.2C10 17.2 6.8 15.2 6.8 13.1C6.8 12.1 7.6 11.3 8.5 11.3C9.1 11.3 9.6 11.6 10 12.2C10.4 11.6 10.9 11.3 11.5 11.3C12.4 11.3 13.2 12.1 13.2 13.1C13.2 15.2 10 17.2 10 17.2Z',
+    stroke: true,
+    fill: true,
+    cap: StrokeCap.round,
+    join: StrokeJoin.round,
+  ),
+]);
+
+const _gGem = SynkGlyph([
+  SynkGlyphPart(
+    'M7 4H17L21 9L12 20.5L3 9L7 4Z',
+    stroke: true,
+    fill: false,
+    cap: StrokeCap.round,
+    join: StrokeJoin.round,
+  ),
+  SynkGlyphPart(
+    'M3 9H21M9.5 4L8 9L12 20.5L16 9L14.5 4',
+    stroke: true,
+    fill: false,
+    cap: StrokeCap.round,
+    join: StrokeJoin.round,
+  ),
+]);
+
 enum SynkIcons {
   home(_gHome01),
   close(_gCancel01),
@@ -1820,7 +1904,12 @@ enum SynkIcons {
   calendar(_gCalendar03),
   calendarAdd(_gCalendarAdd01),
   cake(_gBirthdayCake),
-  gift(_gGift);
+  gift(_gGift),
+  // Brand
+  discover(_gBrandEye),
+  chats(_gChats),
+  cards(_gCards),
+  gem(_gGem);
 
   const SynkIcons(this.glyph);
   final SynkGlyph glyph;

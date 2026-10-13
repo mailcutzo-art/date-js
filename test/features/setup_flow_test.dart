@@ -3,6 +3,7 @@ import 'package:date_js/app/providers/session_providers.dart';
 import 'package:date_js/design_system/design_system.dart';
 import 'package:date_js/domain/models/gender.dart';
 import 'package:date_js/shared/widgets/verified_badge.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../support/app_harness.dart';
@@ -135,7 +136,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('date-js'), findsWidgets, reason: 'Discover header');
-    expect(find.text('Discover'), findsOneWidget, reason: 'nav bar');
+    expect(
+      find.byKey(const ValueKey('nav-Discover')),
+      findsOneWidget,
+      reason: 'nav bar',
+    );
   });
 
   testWidgets('verification plays the scan and marks the profile verified', (

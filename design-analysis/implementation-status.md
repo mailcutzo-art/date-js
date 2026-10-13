@@ -16,6 +16,13 @@ Branch `claude/zealous-maxwell-kmmxfk`. Flutter 3.47.6, Riverpod 3 + go_router, 
   force-push and has not been done.
 - If you own the app this was meant to match, port from its **source or design files** instead; that
   is the accurate route and nothing here blocks it.
+- **Brand restyle (branch `claude/ecstatic-meitner-6hch80`).** The owner supplied five promo
+  screenshots as the visual spec (magenta / orange / violet waves, black ink shapes, cream chips,
+  bubbles and photo frames, hand-lettered headings). They were recreated in code by eye: colours,
+  layouts and the doodles (crown, hearts, starburst, swallow, sparkle) are new vector drawings, the
+  photos are generated placeholders (`PhotoArt`), and the character illustrations (leopard, cat mask)
+  were not reproduced. The lettering font is Permanent Marker (Apache 2.0) and the bio serif is Young
+  Serif (OFL), the closest open fonts; swap in the original font files if the design uses its own.
 
 ## Done
 

@@ -575,10 +575,10 @@ void main() {
       await pumpCard(tester, message);
       final icon = mainIcon(tester);
       expect(icon.icon, SynkIcons.info);
-      expect(icon.color, SynkColors.light.primary);
+      expect(icon.color, SynkColors.light.primaryText);
       expect(
         tileColor(tester),
-        SynkColors.light.primary.withValues(alpha: 0x15 / 255),
+        SynkColors.light.primaryText.withValues(alpha: 0x15 / 255),
       );
       expect(
         tester.getSize(
