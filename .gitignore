@@ -49,3 +49,7 @@ app.*.map.json
 
 # flutter_test golden failure artifacts
 **/failures/
+
+# Third-party binaries must not be committed
+*.apk
+*.aab
