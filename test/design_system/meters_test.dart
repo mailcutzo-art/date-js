@@ -540,11 +540,11 @@ void main() {
         }
         expect(
           SynkColors.light.toneAccent(SynkTone.lavender),
-          const Color(0xFFA9B6FD),
+          SynkColors.light.periwinkle,
         );
         expect(
           SynkColors.light.toneAccent(SynkTone.ice),
-          const Color(0xFFC4D5DD),
+          SynkColors.light.blueGrey,
         );
       },
     );

@@ -2,7 +2,6 @@ import 'package:date_js/app/providers/onboarding_providers.dart';
 import 'package:date_js/app/providers/session_providers.dart';
 import 'package:date_js/design_system/design_system.dart';
 import 'package:date_js/domain/models/gender.dart';
-import 'package:date_js/shared/widgets/main_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -125,12 +124,7 @@ void main() {
           setUp: () async {
             await tester.pumpWidget(testApp(session: signedIn()));
             await tester.pumpAndSettle();
-            await tester.tap(
-              find.descendant(
-                of: find.byType(MainNavBar),
-                matching: find.text('Matches'),
-              ),
-            );
+            await tester.tap(find.byKey(const ValueKey('nav-Matches')));
             await tester.pumpAndSettle();
           },
         );
@@ -145,12 +139,7 @@ void main() {
           setUp: () async {
             await tester.pumpWidget(testApp(session: signedIn()));
             await tester.pumpAndSettle();
-            await tester.tap(
-              find.descendant(
-                of: find.byType(MainNavBar),
-                matching: find.text('Chats'),
-              ),
-            );
+            await tester.tap(find.byKey(const ValueKey('nav-Chats')));
             await tester.pumpAndSettle();
           },
         );
@@ -165,12 +154,7 @@ void main() {
           setUp: () async {
             await tester.pumpWidget(testApp(session: signedIn()));
             await tester.pumpAndSettle();
-            await tester.tap(
-              find.descendant(
-                of: find.byType(MainNavBar),
-                matching: find.text('Chats'),
-              ),
-            );
+            await tester.tap(find.byKey(const ValueKey('nav-Chats')));
             await tester.pumpAndSettle();
             await tester.tap(find.text('Tara'));
             await tester.pumpAndSettle();
@@ -187,12 +171,7 @@ void main() {
           setUp: () async {
             await tester.pumpWidget(testApp(session: signedIn()));
             await tester.pumpAndSettle();
-            await tester.tap(
-              find.descendant(
-                of: find.byType(MainNavBar),
-                matching: find.text('Profile'),
-              ),
-            );
+            await tester.tap(find.byKey(const ValueKey('nav-Profile')));
             await tester.pumpAndSettle();
           },
         );
@@ -207,12 +186,7 @@ void main() {
           setUp: () async {
             await tester.pumpWidget(testApp(session: signedIn()));
             await tester.pumpAndSettle();
-            await tester.tap(
-              find.descendant(
-                of: find.byType(MainNavBar),
-                matching: find.text('Profile'),
-              ),
-            );
+            await tester.tap(find.byKey(const ValueKey('nav-Profile')));
             await tester.pumpAndSettle();
             await tester.tap(find.text('Go Premium'));
             await tester.pumpAndSettle();

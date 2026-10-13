@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../design_system/design_system.dart';
 
-/// Small blue tick shown next to the name of a selfie-verified profile.
+/// Small magenta tick shown next to the name of a selfie-verified profile.
 class VerifiedBadge extends StatelessWidget {
   const VerifiedBadge({this.size = 18, super.key});
 
@@ -16,14 +16,14 @@ class VerifiedBadge extends StatelessWidget {
         width: size,
         height: size,
         decoration: const BoxDecoration(
-          color: SynkPalette.indigo,
+          color: SynkPalette.hotMagenta,
           shape: BoxShape.circle,
         ),
         alignment: Alignment.center,
         child: SynkIcon(
           SynkIcons.check,
           size: size * 0.62,
-          color: Colors.white,
+          color: SynkPalette.nightInk,
           strokeWidth: 2.4,
         ),
       ),

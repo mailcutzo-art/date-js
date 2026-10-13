@@ -24,9 +24,7 @@ Future<void> tapLabel(WidgetTester tester, String label) async {
 }
 
 Future<void> openTab(WidgetTester tester, String label) async {
-  await tester.tap(
-    find.descendant(of: find.byType(MainNavBar), matching: find.text(label)),
-  );
+  await tester.tap(find.byKey(ValueKey('nav-$label')));
   await tester.pumpAndSettle();
 }
 

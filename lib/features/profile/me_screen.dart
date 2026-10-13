@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../app/providers/session_providers.dart';
 import '../../app/router/app_routes.dart';
 import '../../design_system/design_system.dart';
+import '../../shared/brand/brand.dart';
 import '../../shared/widgets/profile_avatar.dart';
 import '../../shared/widgets/settings_tile.dart';
 import '../../shared/widgets/verified_badge.dart';
@@ -57,11 +58,7 @@ class MeScreen extends ConsumerWidget {
                 ],
                 if (session.premium) ...[
                   const SizedBox(width: 8),
-                  const SynkBadge(
-                    text: 'Premium',
-                    variant: SynkBadgeVariant.amber,
-                    small: true,
-                  ),
+                  const SynkBadge(text: 'Premium', small: true),
                 ],
               ],
             ),
@@ -105,6 +102,7 @@ class MeScreen extends ConsumerWidget {
   }
 }
 
+/// Mini poster: brand waves, the pitch on a black tag and a crown on a cream starburst.
 class _PremiumCard extends StatelessWidget {
   const _PremiumCard({required this.onTap});
 
@@ -112,37 +110,53 @@ class _PremiumCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PastelCard(
-      tone: SynkTone.blush,
+    return SynkPressable(
       onTap: onTap,
       semanticLabel: 'Go Premium',
-      child: Row(
-        children: [
-          const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SynkText('Go Premium', variant: SynkTextVariant.cardTitle),
-                SizedBox(height: 4),
-                SynkText(
-                  'See who likes you, get more Super Likes and browse privately.',
-                  variant: SynkTextVariant.cardDescription,
+      child: ClipRRect(
+        borderRadius: SynkRadius.xxlAll,
+        child: Stack(
+          children: [
+            const Positioned.fill(
+              child: WavyBackdrop(seed: 3, focus: Alignment(0.9, 0.2)),
+            ),
+            const Positioned(
+              right: -26,
+              top: -14,
+              child: Starburst(
+                size: 124,
+                child: CrownDoodle(size: 48, angle: -0.12),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 12, 92, 12),
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(14, 10, 14, 12),
+                decoration: BoxDecoration(
+                  color: SynkPalette.nightInk,
+                  borderRadius: BorderRadius.circular(16),
                 ),
-              ],
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SynkText(
+                      'Go Premium',
+                      variant: SynkTextVariant.posterSmall,
+                      color: Colors.white,
+                    ),
+                    SizedBox(height: 4),
+                    SynkText(
+                      'See who likes you, get more Super Likes and browse privately.',
+                      variant: SynkTextVariant.cardDescription,
+                      color: SynkPalette.cream,
+                      maxLines: 3,
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: SynkPalette.amber.withValues(alpha: 0.2),
-              shape: BoxShape.circle,
-            ),
-            alignment: Alignment.center,
-            child: const SynkIcon(SynkIcons.crown, color: SynkPalette.amber),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

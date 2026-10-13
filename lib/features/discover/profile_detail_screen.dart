@@ -10,6 +10,7 @@ import '../../design_system/design_system.dart';
 import '../../shared/brand_colors.dart';
 import '../../domain/models/profile.dart';
 import '../../domain/models/swipe.dart';
+import '../../shared/brand/brand.dart';
 import '../../shared/widgets/interest_chips.dart';
 import '../../shared/widgets/photo_carousel.dart';
 import '../../shared/widgets/swipe_action_bar.dart';
@@ -237,9 +238,7 @@ class _Facts extends StatelessWidget {
         ),
         if (profile.bio.isNotEmpty) ...[
           const SizedBox(height: 24),
-          const SectionLabel('About'),
-          const SizedBox(height: 8),
-          SynkText(profile.bio, variant: SynkTextVariant.p),
+          _AboutPanel(bio: profile.bio, city: profile.city),
         ],
         if (profile.interests.isNotEmpty) ...[
           const SizedBox(height: 24),
@@ -275,6 +274,77 @@ class _Fact extends StatelessWidget {
           SynkIcon(icon, size: 16, color: context.colors.mutedForeground),
           const SizedBox(width: 8),
           Expanded(child: SynkText(text, variant: SynkTextVariant.muted)),
+        ],
+      ),
+    );
+  }
+}
+
+/// The "about" card: serif bio on royal purple with an orange strip and a crown doodle.
+class _AboutPanel extends StatelessWidget {
+  const _AboutPanel({required this.bio, required this.city});
+
+  final String bio;
+  final String city;
+
+  @override
+  Widget build(BuildContext context) {
+    // Always dark: the panel colour does not change with the theme.
+    return Theme(
+      data: SynkThemeData.dark,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            width: double.infinity,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              color: SynkPalette.royalPurple,
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(color: SynkPalette.nightInk, width: 2),
+            ),
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(18, 16, 14, 18),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SectionLabel('About'),
+                          const SizedBox(height: 8),
+                          SynkText(
+                            bio,
+                            variant: SynkTextVariant.bio,
+                            color: Colors.white,
+                          ),
+                          if (city.isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            SynkText(
+                              city,
+                              variant: SynkTextVariant.bioSmall,
+                              color: SynkPalette.cream,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 18,
+                    child: ColoredBox(color: SynkPalette.flameOrange),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const Positioned(
+            right: 2,
+            top: -26,
+            child: CrownDoodle(size: 48, angle: 0.18),
+          ),
         ],
       ),
     );

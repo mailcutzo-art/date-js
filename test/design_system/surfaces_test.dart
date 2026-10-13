@@ -295,15 +295,12 @@ void main() {
       // The tones are the reference pastels in light mode.
       expect(
         SynkColors.light.toneSurface(SynkTone.lavender),
-        const Color(0xFFF2F5FF),
+        SynkColors.light.lavender,
       );
-      expect(
-        SynkColors.light.toneSurface(SynkTone.ice),
-        const Color(0xFFE6F3FA),
-      );
+      expect(SynkColors.light.toneSurface(SynkTone.ice), SynkColors.light.ice);
       expect(
         SynkColors.light.toneSurface(SynkTone.blush),
-        const Color(0xFFFBECF1),
+        SynkColors.light.blush,
       );
     });
 

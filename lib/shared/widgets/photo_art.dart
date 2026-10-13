@@ -26,15 +26,16 @@ class PhotoArtPainter extends CustomPainter {
 
   final int seed;
 
+  // Warm, saturated duotones that sit well next to the magenta / orange / violet brand art.
   static const List<List<Color>> _palettes = [
-    [Color(0xFFFF9A8B), Color(0xFFFF6A88), Color(0xFFFFD3A5)],
-    [Color(0xFF84FAB0), Color(0xFF8FD3F4), Color(0xFFCFF3E0)],
-    [Color(0xFFA18CD1), Color(0xFFFBC2EB), Color(0xFFE0C3FC)],
-    [Color(0xFFF6D365), Color(0xFFFDA085), Color(0xFFFFE9B0)],
-    [Color(0xFF5EE7DF), Color(0xFFB490CA), Color(0xFFBFF2EE)],
-    [Color(0xFFFF758C), Color(0xFFFF7EB3), Color(0xFFFFC2D4)],
-    [Color(0xFF667EEA), Color(0xFF764BA2), Color(0xFFB4C0FF)],
-    [Color(0xFF43E97B), Color(0xFF38F9D7), Color(0xFFC8FBE0)],
+    [Color(0xFFFF6A3D), Color(0xFFFF2BD1), Color(0xFFFFD3A5)],
+    [Color(0xFF6B3FA0), Color(0xFFFF7EB3), Color(0xFFE0C3FC)],
+    [Color(0xFFE2C891), Color(0xFFB4654A), Color(0xFFFFF1DE)],
+    [Color(0xFF3A1230), Color(0xFFC2185B), Color(0xFFFFB3D9)],
+    [Color(0xFFFF9A62), Color(0xFFA63CF2), Color(0xFFFFE0C2)],
+    [Color(0xFF2E3A59), Color(0xFF8E6CC9), Color(0xFFC9D2FF)],
+    [Color(0xFFD9485F), Color(0xFFFFB86B), Color(0xFFFFE3E8)],
+    [Color(0xFF34296B), Color(0xFFFF5BDC), Color(0xFFEFDDB6)],
   ];
 
   @override

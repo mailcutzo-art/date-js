@@ -4,8 +4,11 @@ import '../design_system/design_system.dart';
 
 /// Brand colour that is safe to use as text, an icon or a border on the page background.
 ///
-/// The theme's dark `primary` (a deep burgundy) is meant for filled surfaces; as text on the dark
-/// background it falls well below 4.5:1, so dark mode uses the lighter brand pink instead.
+/// The hot magenta fill is too light for text on white, so light mode uses a deeper magenta and
+/// dark mode a lighter one (see [SynkColors.primaryText]).
 extension BrandColors on SynkColors {
-  Color get brandText => isDark ? SynkPalette.brandPinkText : primary;
+  Color get brandText => primaryText;
+
+  /// Fill of incoming chat bubbles, photo frames and interest chips.
+  Color get creamSurface => isDark ? muted : SynkPalette.cream;
 }

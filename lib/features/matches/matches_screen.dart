@@ -11,6 +11,7 @@ import '../../app/router/app_routes.dart';
 import '../../design_system/design_system.dart';
 import '../../domain/models/conversation.dart';
 import '../../domain/models/profile.dart';
+import '../../shared/brand/brand.dart';
 import '../../shared/widgets/photo_art.dart';
 import '../../shared/widgets/verified_badge.dart';
 import '../premium/premium_prompt.dart';
@@ -160,7 +161,7 @@ class _LikesGrid extends ConsumerWidget {
                   onTap: () => context.push(AppRoutes.premium),
                   child: Row(
                     children: [
-                      const SynkIcon(SynkIcons.crown, color: SynkPalette.amber),
+                      const CrownDoodle(size: 28, angle: -0.1),
                       const SizedBox(width: 12),
                       Expanded(
                         child: SynkText(
@@ -191,8 +192,8 @@ class _TileGrid extends StatelessWidget {
       crossAxisCount: 2,
       mainAxisSpacing: 12,
       crossAxisSpacing: 12,
-      childAspectRatio: 0.74,
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      childAspectRatio: 0.8,
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
       children: children,
     );
   }
@@ -241,56 +242,39 @@ class _ProfileTile extends StatelessWidget {
       semanticLabel: blurred
           ? 'Locked profile, Premium'
           : '${profile.name}, ${profile.age}',
-      child: ClipRRect(
-        borderRadius: SynkRadius.xlAll,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            photo,
-            const DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.transparent, Color(0xB3000000)],
-                  stops: [0.55, 1],
-                ),
-              ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        fit: StackFit.expand,
+        children: [
+          FramedPhoto(
+            photo: photo,
+            label: blurred ? null : '${profile.name}, ${profile.age}',
+            radius: 18,
+            frame: 6,
+          ),
+          if (blurred)
+            const Center(
+              child: SynkIcon(SynkIcons.lock, size: 28, color: Colors.white),
             ),
-            if (badge != null)
-              Positioned(
-                left: 10,
-                top: 10,
-                child: SynkBadge(text: badge!, small: true),
-              ),
-            if (blurred)
-              const Center(
-                child: SynkIcon(SynkIcons.lock, size: 28, color: Colors.white),
-              )
-            else
-              Positioned(
-                left: 12,
-                right: 12,
-                bottom: 10,
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: SynkText(
-                        '${profile.name}, ${profile.age}',
-                        variant: SynkTextVariant.listTitle,
-                        color: Colors.white,
-                        maxLines: 1,
-                      ),
-                    ),
-                    if (profile.verified) ...[
-                      const SizedBox(width: 6),
-                      const VerifiedBadge(size: 14),
-                    ],
-                  ],
-                ),
-              ),
+          if (badge != null) ...[
+            Positioned(
+              left: 12,
+              top: 12,
+              child: SynkBadge(text: badge!, small: true),
+            ),
+            const Positioned(
+              right: -6,
+              top: -8,
+              child: HeartSticker(size: 30, angle: 0.25),
+            ),
           ],
-        ),
+          if (profile.verified && !blurred)
+            const Positioned(
+              right: 12,
+              bottom: 12,
+              child: VerifiedBadge(size: 16),
+            ),
+        ],
       ),
     );
   }

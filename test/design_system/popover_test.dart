@@ -504,7 +504,7 @@ void main() {
       );
       final style = styleOf(tester, 'Newest');
       expect(style.fontWeight, FontWeight.w600);
-      expect(style.color, SynkColors.light.primary);
+      expect(style.color, SynkColors.light.primaryText);
     });
 
     testWidgets('selected uses the brand pink in dark mode for contrast', (
@@ -539,7 +539,7 @@ void main() {
       );
       final icon = tester.widget<SynkIcon>(find.byType(SynkIcon));
       expect(icon.icon, SynkIcons.pencil);
-      expect(icon.color, SynkColors.light.primary);
+      expect(icon.color, SynkColors.light.primaryText);
       expect(
         tester.getRect(find.byType(SynkIcon)).right,
         lessThan(tester.getRect(find.text('Edit')).left),

@@ -2,12 +2,41 @@ import 'package:flutter/painting.dart';
 
 /// Fixed colours that are identical in light and dark (ported from `SynklyPalette`).
 abstract final class SynkPalette {
-  static const Color brandPink = Color(0xFFF60669);
+  /// The brand's hot magenta (wavy backgrounds, selected chips, unread dots). 6.1:1 against
+  /// [nightInk], so text drawn on it is always black.
+  static const Color brandPink = hotMagenta;
 
-  /// [brandPink] lightened by 36 % towards white for text and icons on the dark theme (4.6:1 or
-  /// more on every dark surface and chip fill; the brand pink itself is 3.3:1 on the soft chip
-  /// fill). Only drawn as text and icons: fills, rings and buttons keep the brand colours.
-  static const Color brandPinkText = Color(0xFFF9609F);
+  /// Magenta for text and icons on the dark theme (6.6:1 or more on every dark surface). Only
+  /// drawn as text and icons: fills keep [hotMagenta].
+  static const Color brandPinkText = Color(0xFFFF5BDC);
+
+  // Brand art palette (posters, wavy backgrounds, doodles).
+  static const Color hotMagenta = Color(0xFFFF2BD1);
+  static const Color flameOrange = Color(0xFFFF4D1A);
+  static const Color electricViolet = Color(0xFFA63CF2);
+
+  /// Chat bubbles, photo frames and interest chips. 14.7:1 against [nightInk].
+  static const Color cream = Color(0xFFEFDDB6);
+
+  /// Darker cream for strokes and pressed states on [cream].
+  static const Color creamDeep = Color(0xFFDCC28C);
+  static const Color nightInk = Color(0xFF0C0B0D);
+
+  /// Deep magenta that holds 5.5:1 on white (brand text on the light theme).
+  static const Color magentaText = Color(0xFFC2009B);
+
+  /// Profile "about" panel (12.5:1 with white text, 9.4:1 with cream).
+  static const Color royalPurple = Color(0xFF34296B);
+
+  /// Dark plum card behind photos on the dark poster screens.
+  static const Color plum = Color(0xFF3A1230);
+
+  /// Wavy background bands, in drawing order.
+  static const List<Color> waves = <Color>[
+    hotMagenta,
+    flameOrange,
+    electricViolet,
+  ];
   static const Color notificationAccent = Color(0xFFFF1F6B);
   static const Color signInHero = Color(0xFFFF00FF);
 
@@ -91,11 +120,11 @@ abstract final class SynkPalette {
 
   /// Confetti colours.
   static const List<Color> confetti = <Color>[
-    Color(0xFFF60669),
-    Color(0xFFFFB020),
-    Color(0xFF6366F1),
-    Color(0xFF22C55E),
-    Color(0xFF22D3EE),
+    hotMagenta,
+    flameOrange,
+    electricViolet,
+    cream,
+    Color(0xFF0C0B0D),
     Color(0xFFFFFFFF),
   ];
 

@@ -163,16 +163,16 @@ void main() {
             currentIndex: 0,
             onTap: (i) => tapped = i,
             items: const [
-              NavItem(icon: SynkIcons.flame, label: 'Discover'),
-              NavItem(icon: SynkIcons.heart, label: 'Matches'),
-              NavItem(icon: SynkIcons.chat, label: 'Chats', badge: 3),
+              NavItem(icon: SynkIcons.discover, label: 'Discover'),
+              NavItem(icon: SynkIcons.cards, label: 'Matches'),
+              NavItem(icon: SynkIcons.chats, label: 'Chats', badge: 3),
             ],
           ),
         ),
       ),
     );
     expect(find.text('3'), findsOneWidget);
-    await tester.tap(find.text('Chats'));
+    await tester.tap(find.byKey(const ValueKey('nav-Chats')));
     expect(tapped, 2);
   });
 

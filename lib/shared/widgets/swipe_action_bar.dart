@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../design_system/design_system.dart';
 
-/// Pass / super like / like buttons under the swipe deck. Each pops slightly while pressed.
+/// Pass / super like / like buttons under the swipe deck: ink rounded squares with a light
+/// outline (X, gem, heart). Each pops slightly while pressed.
 class SwipeActionBar extends StatelessWidget {
   const SwipeActionBar({
     required this.onPass,
@@ -25,24 +26,22 @@ class SwipeActionBar extends StatelessWidget {
         _RoundAction(
           icon: SynkIcons.close,
           label: 'Pass',
-          color: SynkPalette.youtubeRed,
-          size: 60,
+          size: 58,
           onTap: enabled ? onPass : null,
         ),
-        const SizedBox(width: 20),
+        const SizedBox(width: 18),
         _RoundAction(
-          icon: SynkIcons.spark,
+          icon: SynkIcons.gem,
           label: 'Super like',
-          color: SynkPalette.indigo,
           size: 50,
+          accent: true,
           onTap: enabled ? onSuperLike : null,
         ),
-        const SizedBox(width: 20),
+        const SizedBox(width: 18),
         _RoundAction(
           icon: SynkIcons.heart,
           label: 'Like',
-          color: SynkPalette.success,
-          size: 60,
+          size: 58,
           onTap: enabled ? onLike : null,
         ),
       ],
@@ -54,15 +53,17 @@ class _RoundAction extends StatefulWidget {
   const _RoundAction({
     required this.icon,
     required this.label,
-    required this.color,
     required this.size,
     required this.onTap,
+    this.accent = false,
   });
 
   final SynkIcons icon;
   final String label;
-  final Color color;
   final double size;
+
+  /// Magenta icon (super like) instead of white.
+  final bool accent;
   final VoidCallback? onTap;
 
   @override
@@ -76,6 +77,7 @@ class _RoundActionState extends State<_RoundAction> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final enabled = widget.onTap != null;
+    final outline = colors.isDark ? SynkPalette.cream : Colors.white;
     return Semantics(
       button: true,
       enabled: enabled,
@@ -101,12 +103,12 @@ class _RoundActionState extends State<_RoundAction> {
               width: widget.size,
               height: widget.size,
               decoration: BoxDecoration(
-                color: colors.card,
-                shape: BoxShape.circle,
-                border: Border.all(color: widget.color.withValues(alpha: 0.5)),
+                color: SynkPalette.nightInk,
+                borderRadius: BorderRadius.circular(widget.size * 0.28),
+                border: Border.all(color: outline, width: 2),
                 boxShadow: const [
                   BoxShadow(
-                    color: Color(0x1F000000),
+                    color: Color(0x33000000),
                     blurRadius: 12,
                     offset: Offset(0, 4),
                   ),
@@ -116,7 +118,7 @@ class _RoundActionState extends State<_RoundAction> {
               child: SynkIcon(
                 widget.icon,
                 size: widget.size * 0.44,
-                color: widget.color,
+                color: widget.accent ? SynkPalette.hotMagenta : Colors.white,
                 strokeWidth: 2.2,
               ),
             ),

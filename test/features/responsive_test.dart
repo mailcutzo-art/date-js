@@ -2,7 +2,6 @@ import 'package:date_js/app/providers/onboarding_providers.dart';
 import 'package:date_js/app/providers/session_providers.dart';
 import 'package:date_js/design_system/design_system.dart';
 import 'package:date_js/domain/models/gender.dart';
-import 'package:date_js/shared/widgets/main_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -33,12 +32,7 @@ void main() {
         expect(tester.takeException(), isNull, reason: 'discover');
 
         Future<void> tab(String label) async {
-          await tester.tap(
-            find.descendant(
-              of: find.byType(MainNavBar),
-              matching: find.text(label),
-            ),
-          );
+          await tester.tap(find.byKey(ValueKey('nav-$label')));
           await tester.pumpAndSettle();
         }
 
