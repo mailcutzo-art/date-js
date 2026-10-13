@@ -5,7 +5,7 @@ Run on Flutter 3.47.6 (Linux container, no emulator or device available).
 ## Results
 
 - `flutter analyze`: no issues.
-- `flutter test`: **682 passed** (584 existing design-system tests + 98 new).
+- `flutter test`: **682 passed** (583 existing design-system tests + 99 new).
 
 | Suite | Tests | Covers |
 |---|---|---|
