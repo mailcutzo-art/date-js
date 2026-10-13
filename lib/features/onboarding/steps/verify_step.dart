@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/providers/onboarding_providers.dart';
 import '../../../design_system/design_system.dart';
+import '../../../shared/brand_colors.dart';
 import '../setup_step_scaffold.dart';
 
 enum _Phase { idle, scanning, done }
@@ -78,7 +79,7 @@ class _VerifyStepState extends ConsumerState<VerifyStep>
               painter: _ScanRingPainter(
                 progress: scanning ? _c.value : (done ? 1 : 0),
                 track: colors.border,
-                color: done ? SynkPalette.success : colors.primary,
+                color: done ? SynkPalette.success : colors.brandText,
                 spinning: scanning,
               ),
               child: Center(

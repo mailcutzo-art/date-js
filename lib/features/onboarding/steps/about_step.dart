@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/providers/onboarding_providers.dart';
 import '../../../design_system/design_system.dart';
+import '../../../shared/brand_colors.dart';
 import '../../../domain/models/interest.dart';
 import '../../../shared/widgets/interest_chips.dart';
 import '../setup_step_scaffold.dart';
@@ -63,7 +64,7 @@ class _AboutStepState extends ConsumerState<AboutStep> {
               SynkText(
                 '${draft.interests.length}/$kMaxInterests',
                 variant: SynkTextVariant.small,
-                color: full ? context.colors.primary : null,
+                color: full ? context.colors.brandText : null,
               ),
             ],
           ),

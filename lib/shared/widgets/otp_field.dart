@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../design_system/design_system.dart';
+import '../brand_colors.dart';
 
 /// Six-box one-time-code input backed by a single hidden text field, so paste, autofill and
 /// the keyboard all work. [onCompleted] fires once all [length] digits are in.
@@ -63,17 +64,26 @@ class _OtpFieldState extends State<OtpField> {
         onTap: _focus.requestFocus,
         child: Stack(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                for (var i = 0; i < widget.length; i++)
-                  _Box(
-                    char: i < code.length ? code[i] : '',
-                    active: _focus.hasFocus && i == code.length,
-                    error: widget.hasError,
-                    colors: colors,
-                  ),
-              ],
+            // Boxes share the width (capped on wide screens), so six of them fit a 320 dp phone.
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 360),
+                child: Row(
+                  children: [
+                    for (var i = 0; i < widget.length; i++) ...[
+                      if (i > 0) const SizedBox(width: 8),
+                      Expanded(
+                        child: _Box(
+                          char: i < code.length ? code[i] : '',
+                          active: _focus.hasFocus && i == code.length,
+                          error: widget.hasError,
+                          colors: colors,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
             ),
             // The real input sits invisibly on top of the boxes.
             Positioned.fill(
@@ -117,11 +127,10 @@ class _Box extends StatelessWidget {
     final border = error
         ? colors.destructive
         : active
-        ? colors.primary
+        ? colors.brandText
         : colors.border;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 120),
-      width: 46,
       height: 56,
       decoration: BoxDecoration(
         color: colors.solidInputBackground,

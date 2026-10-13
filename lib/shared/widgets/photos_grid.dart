@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../design_system/design_system.dart';
+import '../brand_colors.dart';
 import 'photo_art.dart';
 
 /// 3 x 2 grid of photo slots: filled slots show the photo with a remove button (the first is
@@ -75,23 +76,26 @@ class _Filled extends StatelessWidget {
         Positioned(
           right: 4,
           top: 4,
-          child: SynkPressable(
-            semanticLabel: 'Remove photo',
-            onTap: onRemove,
-            hitSlop: const EdgeInsets.all(4),
-            child: Container(
-              width: 26,
-              height: 26,
-              decoration: const BoxDecoration(
-                color: Color(0x99000000),
-                shape: BoxShape.circle,
-              ),
-              alignment: Alignment.center,
-              child: const SynkIcon(
-                SynkIcons.close,
-                size: 14,
-                color: Colors.white,
-                strokeWidth: 2.2,
+          child: Semantics(
+            container: true,
+            child: SynkPressable(
+              semanticLabel: 'Remove photo',
+              onTap: onRemove,
+              hitSlop: const EdgeInsets.all(4),
+              child: Container(
+                width: 26,
+                height: 26,
+                decoration: const BoxDecoration(
+                  color: Color(0x99000000),
+                  shape: BoxShape.circle,
+                ),
+                alignment: Alignment.center,
+                child: const SynkIcon(
+                  SynkIcons.close,
+                  size: 14,
+                  color: Colors.white,
+                  strokeWidth: 2.2,
+                ),
               ),
             ),
           ),
@@ -110,23 +114,26 @@ class _Empty extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return SynkPressable(
-      semanticLabel: 'Add photo',
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: colors.muted,
-          borderRadius: SynkRadius.lgAll,
-          border: Border.all(
-            color: highlight ? colors.primary : colors.border,
-            width: highlight ? 2 : 1,
+    return Semantics(
+      container: true,
+      child: SynkPressable(
+        semanticLabel: 'Add photo',
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            color: colors.muted,
+            borderRadius: SynkRadius.lgAll,
+            border: Border.all(
+              color: highlight ? colors.brandText : colors.border,
+              width: highlight ? 2 : 1,
+            ),
           ),
-        ),
-        alignment: Alignment.center,
-        child: SynkIcon(
-          SynkIcons.add,
-          size: 26,
-          color: highlight ? colors.primary : colors.mutedForeground,
+          alignment: Alignment.center,
+          child: SynkIcon(
+            SynkIcons.add,
+            size: 26,
+            color: highlight ? colors.brandText : colors.mutedForeground,
+          ),
         ),
       ),
     );

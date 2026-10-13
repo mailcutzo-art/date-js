@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/providers/chat_providers.dart';
+import '../../app/providers/clock_provider.dart';
 import '../../app/router/app_routes.dart';
 import '../../core/utils/chat_time.dart';
 import '../../design_system/design_system.dart';
+import '../../shared/brand_colors.dart';
 import '../../domain/models/conversation.dart';
 import '../../domain/models/message.dart';
 import '../../shared/widgets/profile_avatar.dart';
@@ -105,7 +107,7 @@ class _NewMatch extends StatelessWidget {
   }
 }
 
-class _ConversationTile extends StatelessWidget {
+class _ConversationTile extends ConsumerWidget {
   const _ConversationTile({required this.conversation});
 
   final Conversation conversation;
@@ -121,7 +123,7 @@ class _ConversationTile extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
     final unread = conversation.unread > 0;
     final last = conversation.last!;
@@ -149,7 +151,7 @@ class _ConversationTile extends StatelessWidget {
                       ? SynkText(
                           'typing…',
                           variant: SynkTextVariant.small,
-                          color: colors.primary,
+                          color: colors.brandText,
                         )
                       : SynkText(
                           _preview,
@@ -165,7 +167,7 @@ class _ConversationTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 SynkText(
-                  formatChatTime(last.sentAt, DateTime.now()),
+                  formatChatTime(last.sentAt, ref.watch(clockProvider)()),
                   variant: SynkTextVariant.listDescription,
                 ),
                 const SizedBox(height: 6),

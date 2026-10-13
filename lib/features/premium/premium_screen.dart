@@ -6,6 +6,7 @@ import '../../app/providers/session_providers.dart';
 import '../../app/shell/root_shell.dart';
 import '../../core/config/app_info.dart';
 import '../../design_system/design_system.dart';
+import '../../shared/brand_colors.dart';
 
 class _Plan {
   const _Plan(this.months, this.price, this.perMonth, {this.tag});
@@ -38,8 +39,19 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen>
   late final AnimationController _glow = AnimationController(
     vsync: this,
     duration: const Duration(seconds: 4),
-  )..repeat(reverse: true);
+  );
   int _selected = 1;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Honour the system "remove animations" setting: the glow rests instead of looping.
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _glow.stop();
+    } else if (!_glow.isAnimating) {
+      _glow.repeat(reverse: true);
+    }
+  }
 
   @override
   void dispose() {
@@ -105,7 +117,7 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen>
                     variant: SynkTextVariant.muted,
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   const _Benefit(SynkIcons.heart, 'See everyone who likes you'),
                   const _Benefit(SynkIcons.spark, '5 Super Likes every day'),
                   const _Benefit(
@@ -193,7 +205,7 @@ class _Hero extends StatelessWidget {
       builder: (context, _) {
         final t = Curves.easeInOut.transform(glow.value);
         return Container(
-          height: 140,
+          height: 104,
           decoration: BoxDecoration(
             borderRadius: SynkRadius.xxlAll,
             gradient: LinearGradient(
@@ -211,7 +223,7 @@ class _Hero extends StatelessWidget {
             scale: 1 + 0.08 * t,
             child: const SynkIcon(
               SynkIcons.crown,
-              size: 64,
+              size: 52,
               color: Colors.white,
               strokeWidth: 1.6,
             ),
@@ -231,7 +243,7 @@ class _Benefit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 5),
       child: Row(
         children: [
           Container(
@@ -242,7 +254,7 @@ class _Benefit extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
-            child: SynkIcon(icon, size: 18, color: context.colors.primary),
+            child: SynkIcon(icon, size: 18, color: context.colors.brandText),
           ),
           const SizedBox(width: 14),
           Expanded(child: SynkText(text, variant: SynkTextVariant.p)),
@@ -284,7 +296,7 @@ class _PlanCard extends StatelessWidget {
                 : colors.card,
             borderRadius: SynkRadius.lgAll,
             border: Border.all(
-              color: selected ? colors.primary : colors.border,
+              color: selected ? colors.brandText : colors.border,
               width: selected ? 2 : 1,
             ),
           ),

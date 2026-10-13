@@ -113,19 +113,21 @@ class _FloatingCardsState extends State<_FloatingCards>
     return Stack(
       children: [
         const Positioned.fill(child: DotGridBackground()),
-        AnimatedBuilder(
-          animation: _c,
-          builder: (context, _) {
-            final t = Curves.easeInOut.transform(_c.value);
-            return Stack(
-              alignment: Alignment.center,
-              children: [
-                _card(seed: 12, angle: -0.16, dx: -92, dy: 22 - 16 * t),
-                _card(seed: 33, angle: 0.15, dx: 92, dy: 6 + 14 * t),
-                _card(seed: 52, angle: -0.02, dx: 0, dy: -10 + 12 * t),
-              ],
-            );
-          },
+        Positioned.fill(
+          child: AnimatedBuilder(
+            animation: _c,
+            builder: (context, _) {
+              final t = Curves.easeInOut.transform(_c.value);
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  _card(seed: 12, angle: -0.16, dx: -92, dy: 22 - 16 * t),
+                  _card(seed: 33, angle: 0.15, dx: 92, dy: 6 + 14 * t),
+                  _card(seed: 52, angle: -0.02, dx: 0, dy: -10 + 12 * t),
+                ],
+              );
+            },
+          ),
         ),
       ],
     );

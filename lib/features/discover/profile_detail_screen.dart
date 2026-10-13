@@ -7,6 +7,7 @@ import '../../app/providers/discover_providers.dart';
 import '../../app/providers/profile_lookup_providers.dart';
 import '../../app/providers/session_providers.dart';
 import '../../design_system/design_system.dart';
+import '../../shared/brand_colors.dart';
 import '../../domain/models/profile.dart';
 import '../../domain/models/swipe.dart';
 import '../../shared/widgets/interest_chips.dart';
@@ -102,16 +103,30 @@ class ProfileDetailScreen extends ConsumerWidget {
               left: 0,
               right: 0,
               bottom: 0,
-              child: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: SwipeActionBar(
-                    onPass: () =>
-                        _swipe(context, ref, profile, SwipeAction.pass),
-                    onSuperLike: () =>
-                        _swipe(context, ref, profile, SwipeAction.superLike),
-                    onLike: () =>
-                        _swipe(context, ref, profile, SwipeAction.like),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      colors.background.withValues(alpha: 0),
+                      colors.background,
+                    ],
+                    stops: const [0, 0.35],
+                  ),
+                ),
+                child: SafeArea(
+                  top: false,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 28, bottom: 14),
+                    child: SwipeActionBar(
+                      onPass: () =>
+                          _swipe(context, ref, profile, SwipeAction.pass),
+                      onSuperLike: () =>
+                          _swipe(context, ref, profile, SwipeAction.superLike),
+                      onLike: () =>
+                          _swipe(context, ref, profile, SwipeAction.like),
+                    ),
                   ),
                 ),
               ),
@@ -236,7 +251,7 @@ class _Facts extends StatelessWidget {
             SynkText(
               'You both like ${shared.length == 1 ? shared.first : '${shared.length} of these'}.',
               variant: SynkTextVariant.small,
-              color: colors.primary,
+              color: colors.brandText,
             ),
           ],
         ],

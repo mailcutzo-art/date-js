@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/providers/onboarding_providers.dart';
 import '../../../design_system/design_system.dart';
+import '../../../shared/brand_colors.dart';
 import '../../../domain/models/gender.dart';
 import '../setup_step_scaffold.dart';
 
@@ -89,7 +90,7 @@ class _ChoiceCard extends StatelessWidget {
                 : colors.card,
             borderRadius: SynkRadius.lgAll,
             border: Border.all(
-              color: selected ? colors.primary : colors.border,
+              color: selected ? colors.brandText : colors.border,
               width: selected ? 2 : 1,
             ),
           ),
@@ -97,7 +98,7 @@ class _ChoiceCard extends StatelessWidget {
             children: [
               Expanded(child: SynkText(label, variant: SynkTextVariant.large)),
               if (selected)
-                SynkIcon(SynkIcons.checkCircle, color: colors.primary),
+                SynkIcon(SynkIcons.checkCircle, color: colors.brandText),
             ],
           ),
         ),

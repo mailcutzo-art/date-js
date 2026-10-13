@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../design_system/design_system.dart';
+import '../brand_colors.dart';
 import '../../domain/models/profile.dart';
 import 'photo_art.dart';
 
@@ -40,7 +41,7 @@ class ProfileAvatar extends StatelessWidget {
                 padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: colors.primary, width: 2),
+                  border: Border.all(color: colors.brandText, width: 2),
                 ),
                 child: avatar,
               )

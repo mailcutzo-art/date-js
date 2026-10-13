@@ -168,4 +168,40 @@ const List<Profile> kDemoProfiles = [
     verified: true,
     job: 'Founder',
   ),
+  // Seeded matches: they start with a conversation and never appear in the swipe deck.
+  Profile(
+    id: 'p11',
+    name: 'Tara',
+    age: 26,
+    gender: Gender.woman,
+    photos: [
+      ProfilePhoto(id: 'p11a', seed: 111),
+      ProfilePhoto(id: 'p11b', seed: 112),
+      ProfilePhoto(id: 'p11c', seed: 113),
+    ],
+    bio: 'Sunrise hikes and slow Sunday brunches.',
+    city: 'Bengaluru',
+    distanceKm: 5,
+    interests: ['Hiking', 'Coffee', 'Photography'],
+    verified: true,
+    job: 'Architect',
+  ),
+  Profile(
+    id: 'p12',
+    name: 'Vikram',
+    age: 30,
+    gender: Gender.man,
+    photos: [
+      ProfilePhoto(id: 'p12a', seed: 121),
+      ProfilePhoto(id: 'p12b', seed: 122),
+    ],
+    bio: 'Guitar, bad puns and good pasta.',
+    city: 'Bengaluru',
+    distanceKm: 8,
+    interests: ['Live music', 'Cooking', 'Movies'],
+    job: 'Musician',
+  ),
 ];
+
+/// People the user already matched with in the demo; the deck skips them.
+const Set<String> kSeededMatchIds = {'p11', 'p12'};

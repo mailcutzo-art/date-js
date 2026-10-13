@@ -38,6 +38,7 @@ class MockDiscoveryRepository implements DiscoveryRepository {
   Future<List<Profile>> fetchDeck(Preferences prefs) async {
     await Future<void>.delayed(latency);
     return kDemoProfiles.where((p) {
+      if (kSeededMatchIds.contains(p.id)) return false;
       if (!prefs.interestedIn.contains(p.gender)) return false;
       if (p.age < prefs.minAge || p.age > prefs.maxAge) return false;
       if (p.distanceKm > prefs.maxDistanceKm) return false;
@@ -73,9 +74,12 @@ class MockChatRepository implements ChatRepository {
   MockChatRepository({
     this.latency = const Duration(milliseconds: 900),
     Random? random,
-  }) : _random = random ?? Random(7);
+    DateTime Function()? clock,
+  }) : _random = random ?? Random(7),
+       _clock = clock ?? DateTime.now;
 
   final Duration latency;
+  final DateTime Function() _clock;
   final Random _random;
 
   static const List<String> _replies = [
@@ -88,13 +92,13 @@ class MockChatRepository implements ChatRepository {
 
   @override
   Future<List<Conversation>> loadConversations() async {
-    final now = DateTime.now();
-    final aria = kDemoProfiles[0];
-    final sana = kDemoProfiles[4];
+    final now = _clock();
+    final tara = kDemoProfiles[10]; // Tara
+    final vikram = kDemoProfiles[11]; // Vikram
     return [
       Conversation(
-        id: 'c-${aria.id}',
-        other: aria,
+        id: 'c-${tara.id}',
+        other: tara,
         matchedAt: now.subtract(const Duration(days: 1)),
         unread: 2,
         messages: [
@@ -123,8 +127,8 @@ class MockChatRepository implements ChatRepository {
         ],
       ),
       Conversation(
-        id: 'c-${sana.id}',
-        other: sana,
+        id: 'c-${vikram.id}',
+        other: vikram,
         matchedAt: now.subtract(const Duration(days: 3)),
         messages: [
           Message(

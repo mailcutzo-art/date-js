@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../design_system/design_system.dart';
+import '../brand_colors.dart';
 
 class NavItem {
   const NavItem({required this.icon, required this.label, this.badge = 0});
@@ -101,7 +102,7 @@ class _NavButton extends StatelessWidget {
                         item.icon,
                         size: 22,
                         color: selected
-                            ? colors.primary
+                            ? colors.brandText
                             : colors.mutedForeground,
                       ),
                     ),
@@ -137,7 +138,7 @@ class _NavButton extends StatelessWidget {
                 SynkText(
                   item.label,
                   variant: SynkTextVariant.listDescription,
-                  color: selected ? colors.primary : colors.mutedForeground,
+                  color: selected ? colors.brandText : colors.mutedForeground,
                 ),
               ],
             ),
