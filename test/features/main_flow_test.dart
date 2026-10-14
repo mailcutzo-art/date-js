@@ -136,6 +136,41 @@ void main() {
       handle.dispose();
     });
 
+    testWidgets('the feed scrolls through everyone to the end', (tester) async {
+      await pumpSignedIn(tester);
+      expect(find.text('That\'s everyone for now'), findsNothing);
+      await tester.scrollUntilVisible(
+        find.text('That\'s everyone for now'),
+        400,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('That\'s everyone for now'), findsOneWidget);
+      expect(find.text('Change filters'), findsOneWidget);
+      // The header snaps back on the way up and the first person is still there.
+      await tester.scrollUntilVisible(
+        find.text('Aria, 27'),
+        -400,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('date-js'), findsOneWidget);
+    });
+
+    testWidgets('swiping a card left passes and right likes', (tester) async {
+      await pumpSignedIn(tester);
+      await tester.drag(find.text('Aria, 27'), const Offset(-500, 0));
+      await tester.pumpAndSettle();
+      expect(find.text('Aria, 27'), findsNothing);
+      expect(find.text('It\'s a match!'), findsNothing);
+
+      await tester.drag(find.text('Rohan, 29'), const Offset(500, 0));
+      await tester.pumpAndSettle();
+      expect(find.text('Rohan, 29'), findsNothing);
+      expect(find.text('It\'s a match!'), findsNothing, reason: 'no like back');
+      expect(find.text('Meera, 25'), findsOneWidget);
+    });
+
     testWidgets('an empty deck offers to adjust the filters', (tester) async {
       final handle = tester.ensureSemantics();
       await pumpSignedIn(tester);

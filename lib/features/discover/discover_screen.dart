@@ -8,15 +8,15 @@ import '../../app/router/app_routes.dart';
 import '../../core/config/app_info.dart';
 import '../../design_system/design_system.dart';
 import '../../domain/models/profile.dart';
-import '../../domain/models/swipe.dart';
 import '../../shared/widgets/match_overlay.dart';
-import '../../shared/widgets/swipe_action_bar.dart';
-import '../../shared/widgets/swipe_deck.dart';
+import '../../shared/brand/brand.dart';
 import '../premium/premium_prompt.dart';
+import 'feed_card.dart';
 import 'filters_sheet.dart';
 
-/// Discover tab: the swipe deck with pass / super like / like buttons, filters and the match
-/// celebration.
+/// Discover tab: a vertical feed of everyone nearby. Each person is a full card with their
+/// interests and their own pass / super like / like buttons (or swipe the card sideways). The
+/// header hides while scrolling down and snaps back on the way up; pull down to refresh.
 class DiscoverScreen extends ConsumerStatefulWidget {
   const DiscoverScreen({super.key});
 
@@ -25,8 +25,6 @@ class DiscoverScreen extends ConsumerStatefulWidget {
 }
 
 class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
-  final _deck = SwipeDeckController();
-
   Future<void> _showMatch(Profile other) async {
     final me = ref.read(sessionProvider).me;
     final notifier = ref.read(discoverProvider.notifier);
@@ -73,82 +71,155 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
 
     final state = ref.watch(discoverProvider);
     final colors = context.colors;
-    final hasDeck = state.deck.isNotEmpty;
+    final myInterests = {...?ref.watch(sessionProvider).me?.interests};
     return Scaffold(
       backgroundColor: colors.background,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 12, 4),
-              child: Row(
+      body: RefreshIndicator(
+        color: colors.foreground,
+        backgroundColor: SynkPalette.cream,
+        edgeOffset: 64,
+        onRefresh: ref.read(discoverProvider.notifier).load,
+        child: CustomScrollView(
+          key: const PageStorageKey('discover-feed'),
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverAppBar(
+              floating: true,
+              snap: true,
+              toolbarHeight: 64,
+              backgroundColor: colors.background,
+              surfaceTintColor: Colors.transparent,
+              scrolledUnderElevation: 0,
+              automaticallyImplyLeading: false,
+              titleSpacing: 20,
+              title: Row(
                 children: [
-                  const Expanded(
-                    child: SynkText(kAppName, variant: SynkTextVariant.h2),
-                  ),
-                  CircleIconButton(
+                  const SynkText(kAppName, variant: SynkTextVariant.h2),
+                  if (state.deck.isNotEmpty) ...[
+                    const SizedBox(width: 10),
+                    SynkBadge(text: '${state.deck.length} nearby', small: true),
+                  ],
+                ],
+              ),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: CircleIconButton(
                     icon: SynkIcons.settings,
                     semanticLabel: 'Filters',
                     tone: CircleButtonTone.soft,
                     onPressed: _openFilters,
                   ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 36),
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 480),
-                    child: _body(state),
-                  ),
                 ),
-              ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: SwipeActionBar(
-                enabled: hasDeck,
-                onPass: () => _deck.swipe(SwipeAction.pass),
-                onSuperLike: () => _deck.swipe(SwipeAction.superLike),
-                onLike: () => _deck.swipe(SwipeAction.like),
-              ),
-            ),
+            ..._body(state, myInterests),
           ],
         ),
       ),
     );
   }
 
-  Widget _body(DiscoverState state) {
+  /// Centres feed content and caps its width on tablets.
+  static Widget _column(Widget child) => Center(
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 480),
+      child: child,
+    ),
+  );
+
+  List<Widget> _body(DiscoverState state, Set<String> myInterests) {
     if (state.failed) {
-      return InlineState(
-        icon: SynkIcons.alert,
-        title: 'Could not load people',
-        body: 'Check your connection and try again.',
-        actionLabel: 'Try again',
-        onAction: ref.read(discoverProvider.notifier).load,
-      );
+      return [
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: InlineState(
+            icon: SynkIcons.alert,
+            title: 'Could not load people',
+            body: 'Check your connection and try again.',
+            actionLabel: 'Try again',
+            onAction: ref.read(discoverProvider.notifier).load,
+          ),
+        ),
+      ];
     }
     if (state.loading && state.deck.isEmpty) {
-      return const Skeleton(radius: SynkRadius.xxl);
+      return [
+        SliverList.builder(
+          itemCount: 2,
+          itemBuilder: (context, _) => _column(
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16, 4, 16, 28),
+              child: AspectRatio(
+                aspectRatio: 4 / 5,
+                child: Skeleton(radius: SynkRadius.xxl),
+              ),
+            ),
+          ),
+        ),
+      ];
     }
     if (state.deck.isEmpty) {
-      return EmptyState(
-        icon: SynkIcons.users,
-        title: 'You\'ve seen everyone nearby',
-        body: 'Widen your filters or check back later for new people.',
-        actionLabel: 'Adjust filters',
-        onAction: _openFilters,
-      );
+      return [
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: EmptyState(
+            icon: SynkIcons.users,
+            title: 'You\'ve seen everyone nearby',
+            body: 'Widen your filters or check back later for new people.',
+            actionLabel: 'Adjust filters',
+            onAction: _openFilters,
+          ),
+        ),
+      ];
     }
-    return SwipeDeck(
-      controller: _deck,
-      profiles: state.deck,
-      onInfoTap: (p) => context.push(AppRoutes.profile(p.id)),
-      onSwiped: (profile, action) =>
-          ref.read(discoverProvider.notifier).swipe(profile, action),
-    );
+    final notifier = ref.read(discoverProvider.notifier);
+    return [
+      SliverList.builder(
+        itemCount: state.deck.length,
+        itemBuilder: (context, i) {
+          final profile = state.deck[i];
+          return _column(
+            FeedCard(
+              key: ValueKey(profile.id),
+              profile: profile,
+              shared: {...profile.interests}.intersection(myInterests),
+              onInfoTap: () => context.push(AppRoutes.profile(profile.id)),
+              onAction: (action) => notifier.swipe(profile, action),
+            ),
+          );
+        },
+      ),
+      SliverToBoxAdapter(
+        child: _column(
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 40),
+            child: Column(
+              children: [
+                const HeartSticker(size: 34, angle: -0.15),
+                const SizedBox(height: 12),
+                const SynkText(
+                  'That\'s everyone for now',
+                  variant: SynkTextVariant.h2,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 4),
+                const SynkText(
+                  'Pull down to refresh, or widen your filters to meet more people.',
+                  variant: SynkTextVariant.muted,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                SynkButton(
+                  label: 'Change filters',
+                  variant: SynkButtonVariant.soft,
+                  onPressed: _openFilters,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ];
   }
 }
